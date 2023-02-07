@@ -5,8 +5,9 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const { mapDBtoModel } = require('../utils');
 
 class MusicsService {
-  constructor() {
+  constructor(cacheService) {
     this._pool = new Pool();
+    this._cacheService = cacheService;
   }
 
   async addAlbum({ name, year }) {
@@ -77,6 +78,21 @@ class MusicsService {
 
     if (!result.rows.length) {
       throw new NotFoundError('Album failed to delete. No id found');
+    }
+
+    await this._cacheService.delete(`albumLikes:${id}`);
+  }
+
+  async addCoverAlbumById(id, coverUrl) {
+    const query = {
+      text: 'update albums set cover_url = $1 where id = $2 returning id',
+      values: [coverUrl, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Album cannot be found. Id does not exist');
     }
   }
 

@@ -31,8 +31,14 @@ exports.up = (pgm) => {
       notNull: false,
     },
   });
+
+  // add contraint foreign key to the album_id column referenced to albums.id
+  pgm.addConstraint('songs', 'fk_songs.album_id_albums.id', 'FOREIGN KEY(album_id) REFERENCES albums(id) ON DELETE CASCADE');
 };
 
 exports.down = (pgm) => {
   pgm.dropTable('songs');
+
+  // drop contraint foreign key
+  pgm.dropConstraint('songs', 'fk_songs.album_id_albums.id');
 };

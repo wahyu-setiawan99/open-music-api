@@ -8,6 +8,10 @@ const mapDBtoModel = ({
   performer,
   duration,
   album_id,
+  username,
+  action,
+  time,
+  cover_url,
 }) => ({
   id,
   name,
@@ -17,6 +21,10 @@ const mapDBtoModel = ({
   performer,
   duration,
   albumId: album_id,
+  username,
+  action,
+  time,
+  coverUrl: cover_url,
 });
 
 module.exports = { mapDBtoModel };
